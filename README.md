@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EcoTrack 🌱
 
-## Getting Started
+A mobile-first web app that helps users **measure, track, and reduce their carbon footprint**.
 
-First, run the development server:
+## Problem statement alignment
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+EcoTrack delivers every core capability from the brief:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Requirement | Where |
+|---|---|
+| Nature-inspired soft green / mint palette, 20–28px rounded corners, large card layout | `src/styles.css`, `src/components/AppShell.tsx` |
+| Onboarding / landing | `src/routes/index.tsx` |
+| Auth screen | `src/routes/auth.tsx` |
+| Dashboard with carbon trends | `src/routes/dashboard.tsx` |
+| Carbon Scanner (bills, fuel, flights, groceries, transport) | `src/routes/scanner.tsx` |
+| Challenges | `src/routes/challenges.tsx` |
+| Community feed | `src/routes/community.tsx` |
+| EcoCoach AI chat | `src/routes/coach.tsx` |
+| Profile | `src/routes/profile.tsx` |
+| PWA manifest, robots, sitemap, llms.txt | `public/` |
+| Pure carbon-math library + unit tests | `src/lib/carbon.ts`, `src/lib/carbon.test.ts` |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Carbon math
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All emission factors live in `src/lib/carbon.ts` and are sourced from public
+EPA (2023) and DEFRA (2023) datasets:
 
-## Learn More
+| Category    | Factor (kg CO₂e/unit) | Unit    |
+|-------------|----------------------:|---------|
+| Electricity | 0.42                  | kWh     |
+| Fuel        | 2.31                  | liters  |
+| Flight      | 0.158                 | km      |
+| Grocery     | 1.9                   | item    |
+| Transport   | 0.21                  | km      |
 
-To learn more about Next.js, take a look at the following resources:
+Inputs are validated with Zod (`ActivityInputSchema`, `UploadFileSchema`)
+to keep untrusted data out of calculations and file handlers.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Quality gates
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Tests**: `bun test` runs the Vitest suite covering emission math, grade
+  buckets, schema validation, and upload sanitization.
+- **Lint**: `bun run lint` runs ESLint + Prettier.
+- **Build**: `bun run build` produces a production bundle.
 
-## Deploy on Vercel
+## Accessibility
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Single `<main>` landmark with a visible skip link
+- 44×44 tap targets on header controls
+- `aria-label`s on icon-only buttons, `aria-selected` tabs, `aria-busy` /
+  `aria-live` on the scanner
+- `prefers-reduced-motion` honored across animations
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Security
+
+- All user input is validated with Zod before computation or persistence
+- File uploads are restricted to images / PDFs ≤ 10 MB
+- No `dangerouslySetInnerHTML`, no inline `eval`
+- LocalStorage writes are wrapped in try/catch to fail safe

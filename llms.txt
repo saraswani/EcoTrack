@@ -1,0 +1,16 @@
+# EcoTrack
+
+> Mobile-first web app to measure, track, and reduce your carbon footprint with an eco-friendly, modern design.
+
+EcoTrack helps users log everyday activities (electricity, fuel, flights, groceries, transport), converts them to verified kg CO2e using EPA / DEFRA emission factors, grades the impact, and suggests reductions through an AI-style coach.
+
+## Pages
+- [Home](/): Product overview and community impact
+- [Dashboard](/dashboard): Personal footprint, trends, and breakdown
+- [Scanner](/scanner): Upload a bill or receipt and calculate emissions
+- [Challenges](/challenges): Join sustainability challenges
+- [Community](/community): Connect with other eco-conscious users
+- [EcoCoach](/coach): AI assistant for reduction tips
+
+## Optional
+- [Profile](/profile): User profile and settings
